@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.astero</groupId>
 	<artifactId>companions</artifactId>
-	<version>1.9.3</version>
+	<version>1.9.3-SNAPSHOT</version>
 	<build>
 		<resources>
 			<resource>
@@ -17,6 +17,14 @@
 		</resources>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.2</version>
+				<configuration>
+					<outputDirectory>C:\Users\Lucas\Documents\Projetos\Servidor testes\plugins</outputDirectory>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -25,6 +33,7 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 
@@ -48,10 +57,13 @@
 
 
 	</build>
+
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
 	<dependencies>
 
 		<dependency>

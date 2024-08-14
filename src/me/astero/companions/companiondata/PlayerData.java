@@ -186,16 +186,4 @@ public class PlayerData {
 	{
 		this.pageNumber = number;
 	}
-	
-	
-	
-    
-    
-    
-
-
-    
-
-    
-
 }

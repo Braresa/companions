@@ -42,18 +42,8 @@ public class GiveCompanionCommand implements CommandExecutor {
 					{
 						if(!PlayerData.instanceOf(target).getAllCompanions().contains(getCompanionName))
 						{
-
-								
-							
 								main.getCompanionUtil().storeNewYML(getCompanionName, offlineTarget);
-								
 								main.getCompanionUtil().updateCache(target.getUniqueId(), getCompanionName);
-								
-								
-								
-
-							
-								
 							try
 							{
 								set = Boolean.valueOf(args[2]);

@@ -740,7 +740,11 @@ public class CompanionUtil {
 			customWeapon = main.getFileManager().getCompanions().getString("companions." + getCompanionName + ".weapon");
 			
 			cc.setNameVisible(main.getFileManager().getCompanions().getBoolean("companions." + getCompanionName + ".nameVisible"));
-			cc.setAbilityLevel(Integer.valueOf(main.getFileManager().getCompanions().getString("companions." + getCompanionName + ".ability").split("@")[1]));
+			try {
+				cc.setAbilityLevel(Integer.parseInt(main.getFileManager().getCompanions().getString("companions." + getCompanionName + ".ability").split("@")[1]));
+			} catch (ArrayIndexOutOfBoundsException exception) {
+				// SOLUÇÃO TEMPORÁRIA, não estamos usando habilidade atualmente, provavelmente tem a ver com a database pois eu testei sem database e funcionava normalmente.
+			}
 		}
 		
 		if(!customWeapon.equals("NONE"))

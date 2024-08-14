@@ -152,9 +152,7 @@ public class CompanionsPlugin extends JavaPlugin {
 		setupNMS();
 
 		database = new Database(this, source);
-
-		getLogger().warning("Compilado :3");
-
+		getLogger().info("Companions modificado por Braresa ativado com sucesso!");
 	}
 	
 	@Override
@@ -188,6 +186,7 @@ public class CompanionsPlugin extends JavaPlugin {
 		database.onDisabled();
 		
 		System.out.println(ChatColor.GOLD + "Companions" + ChatColor.GRAY + " by Astero" + ChatColor.GOLD + " has been sucessfully disabled!\n");
+		getLogger().info("Companions modificado por Braresa desativado com sucesso!");
 	}
 	
 	public void saveActiveCompanion(String getCompanionName, Player player, PreparedStatement p, Connection conn) // method not in used
