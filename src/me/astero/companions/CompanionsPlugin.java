@@ -152,13 +152,8 @@ public class CompanionsPlugin extends JavaPlugin {
 		setupNMS();
 
 		database = new Database(this, source);
-		
-		
-		
-	
-		
 
-		
+		getLogger().warning("Compilado :3");
 
 	}
 	
@@ -243,12 +238,13 @@ public class CompanionsPlugin extends JavaPlugin {
 		catch(ArrayIndexOutOfBoundsException versionNotFound) {}
 
 
-		if(spigotVersion.equals("v1_19_R1"))
+		/*if(spigotVersion.equals("v1_19_R3"))
 		{
 			source = "com.mysql.cj.jdbc.MysqlDataSource";
-			companionPacket = new CompanionPacket_1_19_R1(this);
+			companionPacket = new CompanionPacket_1_19_R3(this);
 		}
-		else if(spigotVersion.equals("v1_18_R2") )
+		 */
+		if(spigotVersion.equals("v1_18_R2") )
 		{
 			source = "com.mysql.cj.jdbc.MysqlDataSource";
 			//companionPacket = new CompanionPacket_1_18_R2(this);

@@ -316,7 +316,7 @@ public class CompanionPacket_1_16_R2 implements CompanionPacket, Listener{
 	{
 		//test
 		packetData.get(player.getUniqueId())
-			.getCompanionPacket().setEquipment(EnumItemSlot.MAINHAND, CraftItemStack.asNMSCopy(itemStack));
+			.getCompanionPacket().setSlot(EnumItemSlot.MAINHAND, CraftItemStack.asNMSCopy(itemStack));
 		
 		updateCompanion(player);
 	}
