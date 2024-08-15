@@ -165,12 +165,13 @@ public class CompanionsPlugin extends JavaPlugin {
 		PreparedStatement p = null;
 		Connection conn = null;
 
-		if (getFileHandler().isDatabase()) {
-			for (PlayerData pd : PlayerData.getPlayers().values()) {
+		// o cache do player vai salvar 2 vezes por causa do listener de playerleft k
 
-				getCompanionUtil().saveCache(pd.getPlayer(), pd, p, conn);
+		/*if (getFileHandler().isDatabase()) {
+			for (PlayerData playerData : PlayerData.getPlayers().values()) {
+				// esse cache foi a pior invenção da humanidade 100%
+				getCompanionUtil().saveCache(playerData.getPlayer(), playerData, p, conn);
 
-				//pd.removeCompanion();
 				//companionCount++;
 				//System.out.println(pd.getActiveCompanionName());
 			}
@@ -178,6 +179,7 @@ public class CompanionsPlugin extends JavaPlugin {
 
 			database.close(conn, p, null);
 		}
+		 */
 		
 		//System.out.println(ChatColor.GOLD + "  >" + ChatColor.GRAY + " Removed " + ChatColor.YELLOW + companionCount + ChatColor.GRAY + " Companion(s)..\n");
 		
