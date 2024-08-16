@@ -162,20 +162,15 @@ public class PlayerListener implements Listener {
 		main.getCompanionUtil().saveCache(player);
 
 		PlayerData.instanceOf(player).removeCompanion();
-		
 		PlayerCache.instanceOf(player.getUniqueId()).remove();
 		
 		
 		 Bukkit.getScheduler().scheduleSyncDelayedTask(main, new Runnable() {
-				
+
 			  @Override
 			 public void run()
 			 {
-				  
 				PlayerData.instanceOf(player).remove();
-				
-		
-				
 			 }
 		 }, 20L);
 	}
@@ -195,17 +190,6 @@ public class PlayerListener implements Listener {
 
 		if(PlayerCache.instanceOf(player.getUniqueId()).getCachedCompanionName() != null)
 		{
-			
-			
-			if(main.getCompanionUtil().getPatreonList().contains(player.getName()))
-			{
-				PlayerData.instanceOf(player).setPatreon(true);
-				//PlayerData.instanceOf(player).isPatreon();
-			}
-			//PlayerData.instanceOf(player).setJustJoined(true);
-			
-		
-			
 
 				PlayerData.instanceOf(player)
 					.setActiveCompanionName(PlayerCache.instanceOf(player.getUniqueId()).getCachedCompanionName());

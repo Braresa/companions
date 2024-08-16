@@ -1,19 +1,19 @@
-version: 1.9.5
+version: 2.0.0
 name: Companions
 main: me.astero.companions.CompanionsPlugin
-author: Astero
+authors: [Aster0, Braresa]
 description: Create & fully customize your own companions, then allow players to buy it!
 api-version: 1.13
-softdepend: [Vault, PlaceholderAPI, CompanionsAPI]
+softdepend: [Vault, PlaceholderAPI, CompanionsAPI, PlayerPoints]
 commands:   
   companions:
-    aliases: [c]
+    aliases: [c, pet, pets]
     description: opens up the main GUI.
   givecompanion:
-    aliases: [givec]
+    aliases: [givec, givepet]
     description: gives the specified player the specified Companion. Setting true makes it so it gives it as an active Companion.
   removecompanion:
-    aliases: [removec]   
+    aliases: [removec, removepet]
     description: removes the specified Companion from the specified Player.
   givecompanionitem:
     aliases: [givecitem]
@@ -31,5 +31,5 @@ commands:
   forcedeactive:
     description: forces the specified player's active Companion to be removed.
   companioncoin:
-    aliases: [ccoin, cc]
+    aliases: [ccoin]
     description: manage/view companion coins.

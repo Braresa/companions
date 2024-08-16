@@ -7,6 +7,8 @@ import java.util.logging.Level;
 
 import me.astero.companions.companiondata.PlayerData;
 import me.astero.companions.companiondata.packets.*;
+import org.black_ixx.playerpoints.PlayerPoints;
+import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -30,7 +32,6 @@ import me.astero.companions.companiondata.abilities.PotionEffectAbility;
 import me.astero.companions.companiondata.animations.Animation;
 import me.astero.companions.currency.CompanionCoin;
 import me.astero.companions.database.Database;
-import me.astero.companions.database.VersionChecker;
 import me.astero.companions.economy.EconomyHandler;
 import me.astero.companions.filemanager.FileHandler;
 import me.astero.companions.filemanager.FileManager;
@@ -65,6 +66,7 @@ public class CompanionsPlugin extends JavaPlugin {
 	@Getter private Database database;
 	@Getter private CompanionCoin companionCoin;
 	@Getter private CompanionPacket companionPacket;
+	@Getter private PlayerPointsAPI playerPointsAPI;
 
 	private String source = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
 
@@ -91,12 +93,9 @@ public class CompanionsPlugin extends JavaPlugin {
 		
 
 		new EconomyHandler(this);
-		
-		
+
 		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Misc files are loaded up!");
 
-
-		
 		Bukkit.getPluginManager().registerEvents(new CompanionFollow(this), this);
 		Bukkit.getPluginManager().registerEvents(new CompanionCache(this), this);
 		Bukkit.getPluginManager().registerEvents(new OwnedMenuListener(this), this);
@@ -131,18 +130,19 @@ public class CompanionsPlugin extends JavaPlugin {
 		System.out.println(ChatColor.GOLD + "                    been loaded up." );
 		System.out.println(ChatColor.GOLD + "              >--------------------------< \n");
 		
-		
-
-
-
 
 		companionCoin = new CompanionCoin(this);
 		
 	    if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
 	    {
             new PlaceholderAPI().register();
-           
 	    }
+
+		if(Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
+			this.playerPointsAPI = PlayerPoints.getInstance().getAPI();
+		} else {
+			getLogger().warning("Plugin PlayerPoints não encontrado, a compra de pets poderá ser prejudicada!");
+		}
 
 
 		System.out.println(ChatColor.GOLD + "Companions" + ChatColor.GRAY + " by Astero" + ChatColor.GOLD + " has been sucessfully loaded up!\n");
@@ -165,9 +165,8 @@ public class CompanionsPlugin extends JavaPlugin {
 		PreparedStatement p = null;
 		Connection conn = null;
 
-		// o cache do player vai salvar 2 vezes por causa do listener de playerleft k
 
-		/*if (getFileHandler().isDatabase()) {
+		if (getFileHandler().isDatabase()) {
 			for (PlayerData playerData : PlayerData.getPlayers().values()) {
 				// esse cache foi a pior invenção da humanidade 100%
 				getCompanionUtil().saveCache(playerData.getPlayer(), playerData, p, conn);
@@ -179,7 +178,6 @@ public class CompanionsPlugin extends JavaPlugin {
 
 			database.close(conn, p, null);
 		}
-		 */
 		
 		//System.out.println(ChatColor.GOLD + "  >" + ChatColor.GRAY + " Removed " + ChatColor.YELLOW + companionCount + ChatColor.GRAY + " Companion(s)..\n");
 		
@@ -191,7 +189,7 @@ public class CompanionsPlugin extends JavaPlugin {
 		getLogger().info("Companions modificado por Braresa desativado com sucesso!");
 	}
 	
-	public void saveActiveCompanion(String getCompanionName, Player player, PreparedStatement p, Connection conn) // method not in used
+	public void saveActiveCompanion(String getCompanionName, Player player) // method not in used
 	{
 		if(!getFileHandler().isDatabase())
 			getFileManager().getCompanionsData().set("companions." + player.getUniqueId()
@@ -199,16 +197,13 @@ public class CompanionsPlugin extends JavaPlugin {
 		
 		else
 		{
-			
-					  
-						
 						try
 						{
-							
-							conn = getDatabase().getHikari().getConnection();
-							
-							p = conn.prepareStatement("INSERT INTO `" + getDatabase().getTablePrefix() 
-									+"active` (`UUID`,`name`,`companion`) VALUES (?,?,?)" + 
+
+							Connection conn = getDatabase().getHikari().getConnection();
+
+							PreparedStatement p = conn.prepareStatement("INSERT INTO `" + getDatabase().getTablePrefix()
+									+ "active` (`UUID`,`name`,`companion`) VALUES (?,?,?)" +
 									"  ON DUPLICATE KEY UPDATE companion=\"" + getCompanionName.toUpperCase() + "\"");
 							p.setString(1, player.getUniqueId().toString());
 							p.setString(2, player.getName().toString());

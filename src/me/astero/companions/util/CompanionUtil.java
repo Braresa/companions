@@ -3,7 +3,6 @@ package me.astero.companions.util;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -977,7 +976,7 @@ public class CompanionUtil {
 
 
 	}
-	
+	// Sinceramente, como você pode deixar algo tão importante como o saveCache escondido no utils.companionutil? e ainda colocar a função de salvar a database na classe main do plugin?
 	public void saveCache(Player player, PlayerData pd, PreparedStatement p, Connection conn)
 	{
 		
@@ -987,7 +986,7 @@ public class CompanionUtil {
 
 			
 			if(pd.getActiveCompanionName() != null)
-				main.saveActiveCompanion(pd.getActiveCompanionName(), pd.getPlayer(), p, conn);
+				main.saveActiveCompanion(pd.getActiveCompanionName(), pd.getPlayer());
 		}
 		
 		if(PlayerData.instanceOf(player).getCompanionCoin() != PlayerCache.instanceOf(player.getUniqueId()).getCachedCompanionCoins())

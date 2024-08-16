@@ -213,9 +213,6 @@ public class CompanionPacket_1_8_R3 implements CompanionPacket, Listener{
 		 cp.getHandle().playerConnection.sendPacket(packetTeleport);*/
 		
 		despawnCompanion(player);
-		
-		
-		
 		loadCompanion(player);
 	}
 	
@@ -325,14 +322,8 @@ public class CompanionPacket_1_8_R3 implements CompanionPacket, Listener{
 										
 										if(PlayerData.instanceOf(player).isPatreon() && PlayerData.instanceOf(player).isParticle())
 										{
-					
-											
 											main.getCompanions().giveParticle(player);
-											
 										}
-										
-	
-										
 
 										double x = Math.cos(Math.toRadians(player.getLocation().getYaw() - 180)
 												+ main.getFileHandler().getCompanionDetails()
