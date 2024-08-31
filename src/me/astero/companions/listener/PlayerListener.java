@@ -205,16 +205,6 @@ public class PlayerListener implements Listener {
 				main.getCompanionUtil().delayCompanionSpawn(player);
 			}*/
 		}
-		
-
-
-		
-		 
-		 
-		 
-
-	
-		
 	}
 	
 

@@ -4,10 +4,7 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -528,37 +525,32 @@ public class CompanionUtil {
 		if(main.getFileHandler().isDatabase())
 		{
 			
-			 Bukkit.getScheduler().runTaskAsynchronously(main, new Runnable() {
-					
-				  @Override
-				 public void run()
-				 {
-					  
-						PreparedStatement p = null;
-						try(Connection conn = main.getDatabase().getHikari().getConnection())
-						{
-						
-							
-							p = conn.prepareStatement("INSERT INTO `" + main.getDatabase().getTablePrefix() 
-									+"active` (`UUID`,`name`,`companion`) VALUES (?,?,?)" + 
-									"  ON DUPLICATE KEY UPDATE companion=\"" + getCompanionName.toUpperCase() + "\"");
-							p.setString(1, player.getUniqueId().toString());
-							p.setString(2, player.getName().toString());
-							p.setString(3, getCompanionName.toUpperCase());
-							//p.setString(4, player.getUniqueId().toString());
-		
-							p.execute();
-							
-							main.getDatabase().close(conn, p, null);
-							
-						} 
-						catch (SQLException e1) 
-						{
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-				 }  	
-				});
+			 Bukkit.getScheduler().runTaskAsynchronously(main, () -> {
+
+                    PreparedStatement p = null;
+                    try(Connection conn = main.getDatabase().getHikari().getConnection())
+                    {
+
+
+                        p = conn.prepareStatement("INSERT INTO `" + main.getDatabase().getTablePrefix()
+                                +"active` (`UUID`,`name`,`companion`) VALUES (?,?,?)" +
+                                "  ON DUPLICATE KEY UPDATE companion=\"" + getCompanionName.toUpperCase() + "\"");
+                        p.setString(1, player.getUniqueId().toString());
+                        p.setString(2, player.getName().toString());
+                        p.setString(3, getCompanionName.toUpperCase());
+                        //p.setString(4, player.getUniqueId().toString());
+
+                        p.execute();
+
+                        main.getDatabase().close(conn, p, null);
+
+                    }
+                    catch (SQLException e1)
+                    {
+                        // TODO Auto-generated catch block
+                        e1.printStackTrace();
+                    }
+             });
 		}
 	}
 	public void storeActiveYML(Player player, String getCompanionName)
@@ -740,9 +732,11 @@ public class CompanionUtil {
 			
 			cc.setNameVisible(main.getFileManager().getCompanions().getBoolean("companions." + getCompanionName + ".nameVisible"));
 			try {
-				cc.setAbilityLevel(Integer.parseInt(main.getFileManager().getCompanions().getString("companions." + getCompanionName + ".ability").split("@")[1]));
-			} catch (ArrayIndexOutOfBoundsException exception) {
+				cc.setAbilityLevel(Integer.parseInt(main.getFileManager().getCompanions().getString("companions." + getCompanionName + ".ability").replaceAll("\\D", "")));
+			} catch (Exception exception) {
 				// SOLUÇÃO TEMPORÁRIA, não estamos usando habilidade atualmente, provavelmente tem a ver com a database pois eu testei sem database e funcionava normalmente.
+				main.getLogger().warning("[ERROR] An error ocurred while trying to set ability level! -> " + exception.getMessage());
+				cc.setAbilityLevel(1);
 			}
 		}
 		
@@ -948,6 +942,22 @@ public class CompanionUtil {
 		 }
 		
 		player.openInventory(ownedMenu);
+	}
+
+	public TreeSet<String> getAllCompanionsName() {
+        Set<String> companionsName = Objects.requireNonNull(main.getFileManager().getCompanions().getConfigurationSection("companions")).getKeys(false);
+        return new TreeSet<>(companionsName);
+	}
+
+	public boolean isCompanionNameValid(String targetCompanionName) {
+
+			for (String companionName : getAllCompanionsName()) {
+				if (targetCompanionName.equalsIgnoreCase(companionName)) {
+					return true;
+				}
+			}
+
+		return false;
 	}
 	
 	

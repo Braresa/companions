@@ -5,8 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import me.astero.companions.command.*;
+import me.astero.companions.companiondata.PlayerCache;
 import me.astero.companions.companiondata.PlayerData;
 import me.astero.companions.companiondata.packets.*;
+import me.astero.companions.database.DataUtils;
+import me.astero.companions.listener.companions.CompanionCache;
+import me.astero.companions.listener.companions.PlayerDataHandler;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
@@ -16,16 +21,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import lombok.Getter;
 import me.astero.companions.api.PlaceholderAPI;
-import me.astero.companions.command.ClearCompanionDataCommand;
-import me.astero.companions.command.CompanionCoinCommand;
-import me.astero.companions.command.CompanionCommand;
-import me.astero.companions.command.ForceCompanionActiveCommand;
-import me.astero.companions.command.ForceCompanionDeactiveCommand;
-import me.astero.companions.command.ForceCompanionUpgradeCommand;
-import me.astero.companions.command.GiveCompanionCommand;
-import me.astero.companions.command.GiveCompanionItemCommand;
-import me.astero.companions.command.RemoveCompanionCommand;
-import me.astero.companions.command.TradeCompanionCommand;
 import me.astero.companions.companiondata.Companions;
 import me.astero.companions.companiondata.abilities.CustomAbilities;
 import me.astero.companions.companiondata.abilities.PotionEffectAbility;
@@ -40,7 +35,6 @@ import me.astero.companions.listener.ChatListener;
 import me.astero.companions.listener.PlayerListener;
 import me.astero.companions.listener.VanishListener;
 import me.astero.companions.listener.VehicleListener;
-import me.astero.companions.listener.companions.CompanionCache;
 import me.astero.companions.listener.companions.CompanionFollow;
 import me.astero.companions.listener.companions.CompanionInteraction;
 import me.astero.companions.listener.menu.MainMenuListener;
@@ -67,36 +61,17 @@ public class CompanionsPlugin extends JavaPlugin {
 	@Getter private CompanionCoin companionCoin;
 	@Getter private CompanionPacket companionPacket;
 	@Getter private PlayerPointsAPI playerPointsAPI;
+	@Getter private DataUtils dataUtils;
 
 	private String source = "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
 
-	@Override
-	public void onEnable() 
-	{
-		System.out.println("\n" + ChatColor.GOLD + "Companions" + ChatColor.GRAY + " by Astero" + ChatColor.GOLD + " is loading up...\n");
-		
-		getConfig().options().copyDefaults();
-		saveDefaultConfig();
-		
-		animation = new Animation(this);
-	
-		fileManager = new FileManager(this);
-		formatNumbers = new FormatNumbers();
-		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " YAML files are loaded up!");
-		companionUtil = new CompanionUtil(this);
-		fileHandler = new FileHandler(this);
-		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Caching files is done!");
-		
-		companions = new Companions(this);
-		potionEffectAbility = new PotionEffectAbility(this);
-		customAbility = new CustomAbilities(this);
-		
+	public boolean isSQLDataBase() {
+		return getFileHandler().isDatabase();
+	}
 
-		new EconomyHandler(this);
-
-		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Misc files are loaded up!");
-
+	private void registerEvents() {
 		Bukkit.getPluginManager().registerEvents(new CompanionFollow(this), this);
+		// Bukkit.getPluginManager().registerEvents(new PlayerDataHandler(this), this);
 		Bukkit.getPluginManager().registerEvents(new CompanionCache(this), this);
 		Bukkit.getPluginManager().registerEvents(new OwnedMenuListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new ShopMenuListener(this), this);
@@ -109,9 +84,11 @@ public class CompanionsPlugin extends JavaPlugin {
 		Bukkit.getPluginManager().registerEvents(customAbility, this);
 		Bukkit.getPluginManager().registerEvents(new VanishListener(this), this);
 		Bukkit.getPluginManager().registerEvents(new VehicleListener(this), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerDetailsMenuListener(this), this);	
+		Bukkit.getPluginManager().registerEvents(new PlayerDetailsMenuListener(this), this);
 		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Event Listeners are loaded up!");
-		
+	}
+
+	private void registerCommands() {
 		getCommand("companions").setExecutor(new CompanionCommand(this));
 		getCommand("givecompanion").setExecutor(new GiveCompanionCommand(this));
 		getCommand("removecompanion").setExecutor(new RemoveCompanionCommand(this));
@@ -122,6 +99,39 @@ public class CompanionsPlugin extends JavaPlugin {
 		getCommand("tradecompanion").setExecutor(new TradeCompanionCommand(this));
 		getCommand("forcedeactive").setExecutor(new ForceCompanionDeactiveCommand(this));
 		getCommand("companioncoin").setExecutor(new CompanionCoinCommand(this));
+		getCommand("testdata").setExecutor(new TestDataCommand(this));
+	}
+
+	@Override
+	public void onEnable() 
+	{
+		System.out.println("\n" + ChatColor.GOLD + "Companions" + ChatColor.GRAY + " by Astero" + ChatColor.GOLD + " is loading up...\n");
+		
+		getConfig().options().copyDefaults();
+		saveDefaultConfig();
+		
+		animation = new Animation(this);
+
+		fileManager = new FileManager(this);
+		formatNumbers = new FormatNumbers();
+		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " YAML files are loaded up!");
+		companionUtil = new CompanionUtil(this);
+		dataUtils = new DataUtils(this);
+		fileHandler = new FileHandler(this);
+		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Caching files is done!");
+		
+		companions = new Companions(this);
+		potionEffectAbility = new PotionEffectAbility(this);
+		customAbility = new CustomAbilities(this);
+
+		registerEvents();
+		
+
+		new EconomyHandler(this);
+
+		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Misc files are loaded up!");
+
+		registerCommands();
 		
 		System.out.println(ChatColor.GOLD + ">" + ChatColor.GRAY + " Commands are loaded up!");
 		
@@ -174,7 +184,6 @@ public class CompanionsPlugin extends JavaPlugin {
 				//companionCount++;
 				//System.out.println(pd.getActiveCompanionName());
 			}
-
 
 			database.close(conn, p, null);
 		}

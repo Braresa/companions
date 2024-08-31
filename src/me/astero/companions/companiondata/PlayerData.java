@@ -31,8 +31,9 @@ public class PlayerData {
 
 	
 	@Getter @Setter private ArmorStand activeCompanion, mysteryCompanion;
-	
-	
+
+	@Getter @Setter private Map<String, CustomCompanion> ownedCompanions = new HashMap<>();
+
 	@Getter @Setter private BukkitTask particleTask, animationTask;
 	
 	@Getter private List<BukkitTask> commandTask = new ArrayList<>();
@@ -63,6 +64,7 @@ public class PlayerData {
     
     public List<String> getAllCompanions()
     {
+		/*
     	List<String> allCompanions = new ArrayList<>();
     	try
     	{
@@ -75,7 +77,9 @@ public class PlayerData {
     	{
     		
     	}
-	    	
+
+		 */
+        List<String> allCompanions = new ArrayList<>(ownedCompanions.keySet());
     	return allCompanions;
     }
     

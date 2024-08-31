@@ -30,9 +30,7 @@ public class CompanionFollow implements Listener {
 		
 		
 		main.getCompanionPacket().companionFollow(player);
-			
 
-		
 		/*if(PlayerData.instanceOf(player).getActiveCompanion() != null)
 		{
 			double x = Math.cos(Math.toRadians(player.getLocation().getYaw() - 180));

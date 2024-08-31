@@ -450,6 +450,12 @@ public class CompanionPacket_1_8_R3 implements CompanionPacket, Listener{
 		{
 			if(packetData.get(player.getUniqueId()).getCompanionPacket() != null)
 			{
+
+				if(PlayerData.instanceOf(player).getActiveCompanionName() == null) {
+					despawnCompanion(player);
+					loadCompanion(player);
+					return;
+				}
 				
 				double x = Math.cos(Math.toRadians(player.getLocation().getYaw() - 180)
 						+ main.getFileHandler().getCompanionDetails()

@@ -83,7 +83,7 @@ public class OwnedMenuListener implements Listener {
 						
 						
 					}		
-					for(String getCompanionName : PlayerCache.instanceOf(player.getUniqueId()).getOwnedCache().keySet())
+					for(String getCompanionName : PlayerData.instanceOf(player).getOwnedCompanions().keySet())
 					{
 						
 						if(ChatColor.translateAlternateColorCodes('&', main.getFileHandler().getCompanionDetails().get(getCompanionName).getItemName()).equals(getCurrent))

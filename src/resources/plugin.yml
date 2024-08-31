@@ -33,3 +33,6 @@ commands:
   companioncoin:
     aliases: [ccoin]
     description: manage/view companion coins.
+  testdata:
+    aliases: [d]
+    description: Test data
